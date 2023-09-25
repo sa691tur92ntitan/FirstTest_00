@@ -1,7 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="ja">
   <head>
-    <title>�����}�`���ڂ���</title>
-<style type="text/css">
+    <meta http-equiv="content-type" charset="UTF-8">
+    <title>動く図形をぼかす</title>
+    <style type="text/css">
 body { margin: 0; padding: 0; overflow: hidden; }
 #c {
   background-color:white;
@@ -61,7 +63,7 @@ for(var i=0;i<(txwid*txhei);i++){
 Bart[i]=Bagt[i]=Babt[i]=0;
 Bar[i]=Bag[i]=Bab[i]=0;
 Bar0[i]=Bag0[i]=Bab0[i]=0;
-Barb[i]=0;Bagb[i]=0;Babb[i]=0;//�w�i�摜�̐F�f�[�^�p
+Barb[i]=0;Bagb[i]=0;Babb[i]=0;//背景画像の色データ用
   }
 
 
@@ -73,8 +75,8 @@ ctxc = canvasc.getContext('2d');
 //ctxc.fillStyle ="rgb(0,0,0)";
 //ctxc.fillStyle ="rgb(0,0,250)";
 //ctxc.fillRect(0, 0, WIDTH, HEIGHT);
-ctxc.drawImage(backg,0,0);//Canvas�Ac�ɔw�i�摜�ݒ�
-//���̐F�f�[�^��z��ɂ���B
+ctxc.drawImage(backg,0,0);//Canvas、cに背景画像設定
+//その色データを配列にする。
 Backtexc=ctxc.getImageData(0,0,txwid,txhei);
    for(var i=0;i<txwid*txhei;i++){
       Barb[i]=Backtexc.data[i*4+0];
@@ -107,7 +109,7 @@ Backtexc=ctxc.getImageData(0,0,txwid,txhei);
 
 ctxd.globalCompositeOperation = "source-over";
 //ctxd.fillStyle = "rgb(0,0,0)";
-ctxd.fillStyle = "rgb(0,0,0)";//Canvas�Ad�̔w�i�F�͍�
+ctxd.fillStyle = "rgb(0,0,0)";//Canvas、dの背景色は黒
 ctxd.fillRect(0, 0, WIDTH, HEIGHT);
 
 	//ctxd.globalCompositeOperation = "lighter";
@@ -218,7 +220,7 @@ function initc(){
      complete();    
 }
 
-//gazou�ǂݍ��݂Ȃ�
+//gazou読み込みなど
 function gazou(){
       var url0="suimen.jpg";
 //var url0="https://tubp92zwbuilvoqzebfbeq.on.drv.tw/Mydata00/suimen.jpg";
@@ -228,11 +230,11 @@ backg=loadImage(url0);
 }
 function complete() {
         num++;       
-        if (num!=1) return; // �摜���ǂݍ��܂��Ɖ���
+        if (num!=1) return; // 画像が読み込まれると下へ
      init();
 }
 
-//�摜�ǂݍ���, callback img.addEventListener('load', callback, false);
+//画像読み込み, callback img.addEventListener('load', callback, false);
 function loadImage(url) {
     var img = new Image();
     
@@ -246,12 +248,12 @@ function loadImage(url) {
 
 <body>
 <br>
-�@�[�@GitHub Pages �X�^�[�g�y�[�W�@�[ <br><br>
-�E�w�i�摜�̕\���Ɖ~�ƎO�p���g�����}�`�̝򂵂������Ă݂��B<br>
+　ー　GitHub Pages スタートページ　ー <br><br>
+・背景画像の表示と円と三角を使った図形の暈しを試してみた。<br>
 <br><hr>
 <br><br>
 <img src="suimen.jpg" style="position:absolute;left:260px;top:200px;" >
-<canvas id="c" width="200" height="200">���g����Web�u���E�U�́AHTML5��canvas�ɑΉ����Ă��܂���B
+<canvas id="c" width="200" height="200">お使いのWebブラウザは、HTML5のcanvasに対応していません。
 </canvas>
 <canvas id='d' width="200" height="200"></canvas>
 </body>
