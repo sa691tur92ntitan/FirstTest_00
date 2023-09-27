@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta http-equiv="content-type" charset="UTF-8">
+    <title>動く図形をぼかす</title>
+    <style type="text/css">
+body { margin: 0; padding: 0; overflow: hidden; }
+#c {
+  background-color:white;
+  position:absolute;
+}
+#d {
+background-color:white;
+  position:absolute;
+  left:-200px;
+  top:-200px;
+}
+
+</style>
+<script type="text/javascript">
+    var NUM = 16;
+    var WIDTH = 200;
+    var HEIGHT = 200;
+    var speedX = new Float32Array(NUM);//new Array(NUM)
+    var speedY = new Float32Array(NUM);//new Int32Array(NUM);
+    var locX = new Float32Array(NUM);
+    var locY = new Float32Array(NUM);
+
+    var Bar =  new Int32Array(WIDTH*HEIGHT);
+    var Bag =  new Int32Array(WIDTH*HEIGHT);
+    var Bab =  new Int32Array(WIDTH*HEIGHT);
+    var Baa =  new Int32Array(WIDTH*HEIGHT);
+
+    var Bar0 =  new Int32Array(WIDTH*HEIGHT);
+    var Bag0 =  new Int32Array(WIDTH*HEIGHT);
+    var Bab0 =  new Int32Array(WIDTH*HEIGHT);
+    var Baa0 =  new Int32Array(WIDTH*HEIGHT);
+
+    var Bart =  new Int32Array(WIDTH*HEIGHT);
+    var Bagt =  new Int32Array(WIDTH*HEIGHT);
+    var Babt =  new Int32Array(WIDTH*HEIGHT);
+    var Baat =  new Int32Array(WIDTH*HEIGHT);
+
+    var Barb =  new Int32Array(WIDTH*HEIGHT);
+    var Bagb =  new Int32Array(WIDTH*HEIGHT);
+    var Babb =  new Int32Array(WIDTH*HEIGHT);
+    var Baab =  new Int32Array(WIDTH*HEIGHT);
+
+    var ctxc,ctxd,canvasc,canvasd;
+    var count=0,num=0;
+    var backg;
+
+var Backtexc,Backtexd;
+var txwid=WIDTH,txhei=HEIGHT;
+
+
+
+    function init(){
+
+
+for(var i=0;i<(txwid*txhei);i++){
+
+Bart[i]=Bagt[i]=Babt[i]=0;
+Bar[i]=Bag[i]=Bab[i]=0;
+Bar0[i]=Bag0[i]=Bab0[i]=0;
+Barb[i]=0;Bagb[i]=0;Babb[i]=0;//背景画像の色データ用
+  }
+
+
+ctxd = document.getElementById('d').getContext('2d');
+
+canvasc = document.getElementById('c');
+ctxc = canvasc.getContext('2d');
+
+//ctxc.fillStyle ="rgb(0,0,0)";
+//ctxc.fillStyle ="rgb(0,0,250)";
+//ctxc.fillRect(0, 0, WIDTH, HEIGHT);
+ctxc.drawImage(backg,0,0);//Canvas、cに背景画像設定
+//その色データを配列にする。
+Backtexc=ctxc.getImageData(0,0,txwid,txhei);
+   for(var i=0;i<txwid*txhei;i++){
+      Barb[i]=Backtexc.data[i*4+0];
+      Bagb[i]=Backtexc.data[i*4+1];
+      Babb[i]=Backtexc.data[i*4+2];
+    }
+
+        var rad;
+	    for(var i = 0; i < NUM; i++){
+               rad= Math.PI*2*Math.random();
+
+		locX[i] = Math.random()*(WIDTH-26)+13;
+		locY[i] = Math.random()*(HEIGHT-26)+13;
+
+                speedX[i] = ((Math.random()+1.0)*1.2-0.6);
+		speedY[i] = ((Math.random()+1.1)*1-0.5);
+             
+            }
+
+	    setInterval("draw()", 40);
+    }
+
+    function draw(){
+          draw0();
+          draw1();
+    }
+
+
+    function draw0(){
+
+ctxd.globalCompositeOperation = "source-over";
+//ctxd.fillStyle = "rgb(0,0,0)";
+ctxd.fillStyle = "rgb(0,0,0)";//Canvas、dの背景色は黒
+ctxd.fillRect(0, 0, WIDTH, HEIGHT);
+
+	//ctxd.globalCompositeOperation = "lighter";
+
+	for(var i = 0; i < NUM; i++){
+
+         rad= Math.PI*2*Math.random();
+	    locX[i] = locX[i]+speedX[i];
+	    locY[i] = locY[i]+speedY[i];
+
+            if(locX[i]<=12||locX[i] >= WIDTH-12){
+		speedX[i]=-speedX[i];
+                
+	    }
+	    if(locY[i]<=12||locY[i] >=HEIGHT-12){
+		speedY[i]=-speedY[i];
+                
+	    }
+
+//ctxd.fillStyle = 'rgb(' + r[i] + ',' + g[i] + ',' + b[i] + ')';
+//count>=400&&count<600
+
+            if(i%4==0){
+
+              ctxd.fillStyle = 'rgb(0,150 ,240)';
+              
+            }
+            else if(i%4==1){
+              ctxd.fillStyle = 'rgb(220,220,0)';
+            }
+            else if(i%4==2){
+              ctxd.fillStyle = 'rgb(80,80 ,80)';
+            }
+            else if(i%4==3){
+              ctxd.fillStyle = 'rgb(220,220,220)';
+            }
+
+ctxd.beginPath();
+ctxd.arc(Math.floor(locX[i]), Math.floor(locY[i]), 4, 0, Math.PI*2.0, true);
+//ctxd.fillRect(locX[i], locY[i], 1, 1);
+//ctxd.closePath();
+       ctxd.fill();
+//ctxd.beginPath();
+        ctxd.moveTo(Math.floor(locX[i])-4,Math.floor(locY[i]));
+	ctxd.lineTo(Math.floor(locX[i])+4, Math.floor(locY[i]));
+
+	ctxd.lineTo(Math.floor(locX[i]-speedX[i]*8), Math.floor(locY[i])-20*speedY[i]);
+
+            ctxd.closePath();
+
+            ctxd.fill();
+         }
+ctxd.save();
+
+
+}
+
+    function draw1(){
+
+Backtexd=ctxd.getImageData(0,0,txwid,txhei);
+
+   for(var i=0;i<(txwid);i++){
+       for(var j=0;j<(txhei);j++){
+
+       if(Backtexd.data[(i*(txwid)+j) * 4 + 0]!=0||Backtexd.data[(i*(txwid)+j) * 4 + 1]!=0||Backtexd.data[(i*(txwid)+j) * 4 + 2]!=0){
+          Bar[i*(txwid)+j]=Backtexd.data[(i*(txwid)+j) * 4 + 0];
+          Bag[i*(txwid)+j]=Backtexd.data[(i*(txwid)+j) * 4 + 1];
+          Bab[i*(txwid)+j]=Backtexd.data[(i*(txwid)+j) * 4 + 2];
+       }
+
+         if(i>0&&i<txwid-1 && j>0&&j<txhei-1){
+            Bar0[i*(txwid)+j]=Math.floor((Bar[(i+1)*(txwid)+j]+Bar[(i-1)*(txwid)+j]+Bar[i*(txwid)+j]+Bar[i*(txwid)+(j+1)]+Bar[i*(txwid)+(j-1)])/5);//Math.floor
+            Bag0[i*(txwid)+j]=Math.floor((Bag[(i+1)*(txwid)+j]+Bag[(i-1)*(txwid)+j]+Bag[i*(txwid)+j]+Bag[i*(txwid)+(j+1)]+Bag[i*(txwid)+(j-1)])/5);
+            Bab0[i*(txwid)+j]=Math.floor((Bab[(i+1)*(txwid)+j]+Bab[(i-1)*(txwid)+j]+Bab[i*(txwid)+j]+Bab[i*(txwid)+(j+1)]+Bab[i*(txwid)+(j-1)])/5);
+            }
+         else{
+            Bar0[i*(txwid)+j]=0
+            Bag0[i*(txwid)+j]=0;
+            Bab0[i*(txwid)+j]=0;
+            }
+Backtexc.data[(i*(txwid)+j) * 4 + 0]=Math.floor(Bar0[i*(txwid)+j]+Barb[i*(txwid)+j]);//+Barb[i*(txwid)+j]
+Backtexc.data[(i*(txwid)+j) * 4 + 1]=Math.floor(Bag0[i*(txwid)+j]+Bagb[i*(txwid)+j]);//+Bagb[i*(txwid)+j]
+Backtexc.data[(i*(txwid)+j) * 4 + 2]=Math.floor(Bab0[i*(txwid)+j]+Babb[i*(txwid)+j]);//+Babb[i*(txwid)+j]
+Backtexc.data[(i*(txwid)+j) * 4 + 3]=255;
+
+
+   if(Backtexc.data[(i*(txwid)+j) * 4 + 0]>=255){Backtexc.data[(i*(txwid)+j) * 4 + 0]=255;}
+   if(Backtexc.data[(i*(txwid)+j) * 4 + 1]>=255){Backtexc.data[(i*(txwid)+j) * 4 + 1]=255;}
+   if(Backtexc.data[(i*(txwid)+j) * 4 + 2]>=255){Backtexc.data[(i*(txwid)+j) * 4 + 2]=255;}
+
+     }
+  }
+
+Bart=Bar0;Bar0=Bar;Bar=Bart;
+Bagt=Bag0;Bag0=Bag;Bag=Bagt;
+Babt=Bab0;Bab0=Bab;Bab=Babt;
+
+
+//ctxc.drawImage(Backtexd,0,0);
+
+ctxc.putImageData(Backtexc,0,0);
+ctxc.restore();
+ctxd.restore();
+ }
+
+function initc(){
+     gazou();
+     complete();    
+}
+
+//gazou読み込みなど
+function gazou(){
+      var url0="suimen.jpg";
+//var url0="https://tubp92zwbuilvoqzebfbeq.on.drv.tw/Mydata00/suimen.jpg";
+
+backg=loadImage(url0);
+      //backg=loadImage(url0, complete);
+}
+function complete() {
+        num++;       
+        if (num!=1) return; // 画像が読み込まれると下へ
+     init();
+}
+
+//画像読み込み, callback img.addEventListener('load', callback, false);
+function loadImage(url) {
+    var img = new Image();
+    
+    img.src = url;
+    return img;
+}
+
+    window.onload=initc;
+</script>
+</head>
+
+<body>
+<br>
+　ー　GitHub Pages スタートページ　ー <br><br>
+・背景画像の表示と円と三角を使った図形の暈しを試してみた。<br>
+<br><hr>
+<br><br>
+<img src="suimen.jpg" style="position:absolute;left:260px;top:200px;" >
+<canvas id="c" width="200" height="200">お使いのWebブラウザは、HTML5のcanvasに対応していません。
+</canvas>
+<canvas id='d' width="200" height="200"></canvas>
+</body>
+</html>
+
